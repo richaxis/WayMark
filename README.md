@@ -2,9 +2,9 @@
 
 **Pay for progress, not promises.** Waymark locks funds behind plain-English milestones. A panel of GenLayer validators reads the evidence and releases each payment when it checks out.
 
-- Live app: [YOUR_VERCEL_URL]
+- Live app: [way-mark-delta.vercel.app]
 - Network: GenLayer Studio Next (chain ID 61997, RPC https://studio-next.genlayer.com/api)
-- Contract: [YOUR_CONTRACT_ADDRESS] ([explorer](https://explorer-studio-dev.genlayer.com/))
+- Contract: [0xE64597ccEF274B011EBcec84Cc9d1F8702B24A65] ([explorer](https://explorer-studio-dev.genlayer.com/))
 - Source: [`contracts/waymark.py`](contracts/waymark.py)
 
 ## The problem
