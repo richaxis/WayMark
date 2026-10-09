@@ -1,0 +1,3 @@
+{"name":"waymark","private":true,"type":"module",
+ "scripts":{"deploy":"node deploy/deploy.mjs","demo":"node scripts/demo.mjs"},
+ "dependencies":{"genlayer-js":"2.0.0-rc.1"}}

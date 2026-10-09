@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Waymark: milestone payments settled by validators</title>
+<meta name="description" content="Lock funds. Define milestones. Validators read the evidence and release each payment.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b12;--panel:#0d1421;--line:#1b2a40;--ink:#e8eefc;--mute:#8a97b0;--acc:#3ef0b0;--blue:#6c8cff;--ok:#3ef0b0;--warn:#f5c04a;--bad:#ff6b7d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:400 16px/1.6 "Space Grotesk",system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;
+background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;background-position:-1px -1px}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(60% 50% at 70% 0,rgba(62,240,176,.14),transparent),radial-gradient(50% 40% at 0 30%,rgba(108,140,255,.16),transparent),linear-gradient(transparent 40%,var(--bg) 95%);z-index:-1}
+nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px max(20px,5vw);flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:21px;letter-spacing:-.01em}
+.links{display:flex;gap:22px;color:var(--mute);font-size:15px}.links a{text-decoration:none}.links a:hover{color:var(--ink)}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px;font-size:14px;color:var(--mute)}
+button{font:600 15px "Space Grotesk",sans-serif;border:0;border-radius:12px;padding:12px 22px;background:var(--acc);color:#04130d;cursor:pointer;transition:transform .15s}
+button:hover{transform:translateY(-1px)}button:disabled{opacity:.5}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+main{max-width:1120px;margin:0 auto;padding:0 24px 90px}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:30px;align-items:center;padding:56px 0 40px}
+@media(max-width:860px){.hero{grid-template-columns:1fr}.links{display:none}}
+h1{font-weight:700;font-size:clamp(42px,6.4vw,78px);line-height:1;letter-spacing:-.04em;margin:0 0 20px}
+h1 span{color:var(--acc)}
+.lead{color:var(--mute);font-size:19px;max-width:480px;margin:0 0 28px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero svg{width:100%;height:auto;filter:drop-shadow(0 20px 50px rgba(62,240,176,.15))}
+.band{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin:30px 0 70px}
+.band div{background:var(--panel);padding:20px 24px;color:var(--mute);font-size:15px}.band b{display:block;color:var(--ink);font-size:18px;font-weight:600}
+@media(max-width:700px){.band{grid-template-columns:1fr}}
+h2{font-weight:600;font-size:clamp(28px,4vw,40px);letter-spacing:-.03em;margin:0 0 8px}
+.sec{margin-bottom:80px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px}
+.step svg{width:72px;height:72px;margin-bottom:14px}.step h3{margin:0 0 6px;font-size:20px}.step p{margin:0;color:var(--mute);font-size:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px;margin-bottom:18px}
+.card h2{font-size:24px}.sub{color:var(--mute);font-size:14px;margin:0 0 16px}
+label{display:block;font-size:13px;color:var(--mute);margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;border:1px solid var(--line);background:#09101b;border-radius:12px;padding:12px 14px;color:var(--ink)}
+textarea{min-height:96px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:640px){.row{grid-template-columns:1fr}}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:14px 0 6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--acc));transition:width .6s}
+.ms{border-top:1px solid var(--line);padding:16px 0}.ms .top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.tag{font-size:12px;border-radius:99px;padding:3px 12px;background:#14203a;color:var(--mute)}
+.released{background:rgba(62,240,176,.12);color:var(--ok)}.rejected{background:rgba(255,107,125,.12);color:var(--bad)}.submitted{background:rgba(245,192,74,.12);color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 16px}@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}}.stat{background:#09101b;border:1px solid var(--line);border-radius:14px;padding:14px 16px}.stat b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}button.on{background:var(--acc);color:#04130d;border-color:var(--acc)}
+.act{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}.act input{flex:1;min-width:200px}
+small{color:var(--mute)}a{color:var(--acc)}
+footer{border-top:1px solid var(--line);padding:26px;text-align:center;color:var(--mute);font-size:14px}
+#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#04130d;font-weight:600;border-radius:999px;padding:10px 22px;font-size:14px;display:none;max-width:90vw}
+@media(prefers-reduced-motion:no-preference){.pulse{animation:p 2.4s ease-in-out infinite}@keyframes p{50%{opacity:.35}}}
+</style></head><body>
+<nav><div class="logo"><svg width="30" height="30" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="9" fill="#3ef0b0"/><path d="M7 22 13 11l5 8 3-5 4 8" stroke="#04130d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Waymark</div>
+<div class="links"><a href="#how">How it works</a><a href="#dash">Dashboard</a><a href="#new">New deal</a></div>
+<div class="tools"><span class="pill" id="who">connecting…</span><button class="ghost" id="connect">Connect wallet</button><button class="ghost" id="fund">Get test funds</button></div></nav>
+<main>
+<section class="hero"><div>
+<h1>Pay for <span>progress</span>, not promises.</h1>
+<p class="lead">Lock funds behind plain-English milestones. A panel of independent validators reads the evidence and releases each payment when it checks out.</p>
+<div class="cta"><button onclick="location.hash='new'">Start a deal</button><button class="ghost" onclick="location.hash='how'">See how it works</button></div></div>
+<svg viewBox="0 0 520 400" fill="none" role="img" aria-label="A winding trail with four milestone markers leading to a released payment">
+<rect x="6" y="6" width="508" height="388" rx="28" fill="#0d1421" stroke="#1b2a40"/>
+<path d="M50 340C120 340 120 270 190 270S260 330 320 300 380 200 330 170 250 130 300 80 430 60 470 70" stroke="#1b2a40" stroke-width="18" stroke-linecap="round"/>
+<path d="M50 340C120 340 120 270 190 270S260 330 320 300 380 200 330 170 250 130 300 80 430 60 470 70" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 12"/>
+<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#6c8cff"/><stop offset="1" stop-color="#3ef0b0"/></linearGradient></defs>
+<g><circle cx="50" cy="340" r="14" fill="#6c8cff"/><circle cx="190" cy="270" r="14" fill="#3ef0b0"/><path d="M184 270l4 4 8-9" stroke="#04130d" stroke-width="3" stroke-linecap="round"/>
+<circle cx="330" cy="170" r="14" fill="#3ef0b0"/><path d="M324 170l4 4 8-9" stroke="#04130d" stroke-width="3" stroke-linecap="round"/>
+<circle class="pulse" cx="300" cy="80" r="14" fill="#f5c04a"/><circle cx="470" cy="70" r="14" fill="#1b2a40" stroke="#3ef0b0" stroke-width="2" stroke-dasharray="4 4"/></g>
+<g font-family="Space Grotesk" font-size="13" fill="#8a97b0"><text x="30" y="372">Locked</text><text x="150" y="304">Demo live</text><text x="290" y="206">Docs shipped</text><text x="230" y="60">Under review</text><text x="430" y="104">Final</text></g>
+<g transform="translate(330 250)"><rect width="150" height="64" rx="14" fill="#09101b" stroke="#1b2a40"/>
+<circle cx="30" cy="32" r="9" fill="#3ef0b0"/><circle cx="60" cy="32" r="9" fill="#6c8cff"/><circle cx="90" cy="32" r="9" fill="#3ef0b0"/><circle cx="120" cy="32" r="9" fill="#f5c04a"/>
+<text x="75" y="56" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#8a97b0">validator panel</text></g></svg>
+</section>
+<div class="band"><div><b>No arbiter</b>No owner, admin or pause key</div><div><b>Plain English</b>Criteria anyone can read</div><div><b>Tranche by tranche</b>Pay only for what is proven</div></div>
+<section class="sec" id="how"><h2>How it works</h2><p class="sub">Three moves from agreement to payment.</p>
+<div class="steps">
+<div class="step"><svg viewBox="0 0 72 72" fill="none"><rect x="14" y="30" width="44" height="30" rx="8" fill="#14203a" stroke="#6c8cff" stroke-width="2.5"/><path d="M24 30v-8a12 12 0 0 1 24 0v8" stroke="#6c8cff" stroke-width="2.5"/><circle cx="36" cy="45" r="4" fill="#3ef0b0"/></svg><h3>Lock the funds</h3><p>The funder splits a budget into milestones, each with criteria and a percent share.</p></div>
+<div class="step"><svg viewBox="0 0 72 72" fill="none"><rect x="14" y="10" width="38" height="50" rx="7" fill="#14203a" stroke="#3ef0b0" stroke-width="2.5"/><path d="M22 24h22M22 33h22M22 42h12" stroke="#8a97b0" stroke-width="2.5" stroke-linecap="round"/><circle cx="52" cy="52" r="12" fill="#070b12" stroke="#3ef0b0" stroke-width="2.5"/><path d="m47 52 4 4 7-8" stroke="#3ef0b0" stroke-width="2.5" stroke-linecap="round"/></svg><h3>Submit evidence</h3><p>The builder links a public page: a live demo, a release, a README.</p></div>
+<div class="step"><svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="24" fill="#14203a" stroke="#f5c04a" stroke-width="2.5"/><circle cx="36" cy="36" r="12" stroke="#3ef0b0" stroke-width="2.5"/><path d="M36 28v16M30 36h12" stroke="#3ef0b0" stroke-width="2.5" stroke-linecap="round"/></svg><h3>Validators release</h3><p>Each validator reads the page itself. If they agree it is met, the tranche pays out.</p></div>
+</div></section>
+<section class="sec"><h2>The app</h2><p class="sub">Live on GenLayer Studio Next.</p>
+<section class="card"><h2>Contract</h2><p class="sub">Paste your deployed Waymark address.</p>
+<div class="act"><input id="addr" placeholder="0x…"><button class="ghost" id="save">Save address</button></div></section>
+<section class="card" id="dash"><h2>Dashboard</h2><p class="sub">Funds and deals for the account shown at the top right.</p><div class="stats" id="stats"></div><div class="act" id="tabs"><button class="ghost" data-f="mine">My deals</button><button class="ghost" data-f="all">All deals</button></div></section>
+<section id="deals"></section>
+<section class="card" id="new"><h2>New deal</h2><p class="sub">You lock the funds. Each milestone pays its share when validators find it met.</p>
+<div class="row"><div><label>Builder address</label><input id="b"></div><div><label>Amount to lock (GEN)</label><input id="amt" value="1"></div></div>
+<label>Deal title</label><input id="t" placeholder="Ship the v1 dashboard">
+<label>Milestones, one per line: title | acceptance criteria | percent</label>
+<textarea id="ms">Live demo | A public URL loads a working dashboard | 40
+Docs | A README explains setup and usage | 60</textarea>
+<div class="act"><button id="create">Lock funds and create deal</button></div></section></section>
+</main><footer>Waymark. Built on GenLayer Intelligent Contracts.</footer><div id="msg"></div>
+<script type="module" src="/src/main.js"></script></body></html>

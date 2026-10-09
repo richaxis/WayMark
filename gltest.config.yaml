@@ -1,0 +1,6 @@
+# Network settings for gltest. Direct Mode tests need no network.
+networks:
+  default: studionext
+  studionext:
+    id: 61997
+    url: https://studio-next.genlayer.com/api
